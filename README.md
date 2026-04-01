@@ -70,7 +70,7 @@ You define which of your vault folders maps to which zone in `config.py`.
 
 Place the server inside your vault as a hidden folder — this keeps code and vault together and syncs via your cloud provider (OneDrive, iCloud, etc.):
 ```bash
-git clone https://github.com/luisschoy/lifeos /path/to/your/vault/.lifeos
+git clone https://github.com/luis-schoy/lifeos /path/to/your/vault/.lifeos
 cd /path/to/your/vault/.lifeos
 uv venv
 uv pip install fastmcp "PyMuPDF>=1.25" "pyyaml>=6.0" "rich>=13.0"
