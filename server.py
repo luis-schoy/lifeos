@@ -122,6 +122,17 @@ def enforce_ai_collab(frontmatter: dict) -> dict:
     return frontmatter
 
 
+def enforce_ai_generated(frontmatter: dict) -> dict:
+    """Ensure ai-generated tag is present in frontmatter."""
+    tags = frontmatter.get("tags") or []
+    if isinstance(tags, str):
+        tags = [tags]
+    if "ai-generated" not in tags:
+        tags.append("ai-generated")
+    frontmatter["tags"] = tags
+    return frontmatter
+
+
 def render_frontmatter(fm: dict) -> str:
     """Serialize frontmatter dict back to YAML block."""
     return "---\n" + yaml.dump(fm, allow_unicode=True, sort_keys=False) + "---\n"
@@ -406,6 +417,7 @@ def create_note(filename: str, content: str, folder: str = "") -> str:
     """
     Create a new note in the vault. Defaults to the Claude folder (AI's own space).
     If folder is Projekte/, enforces the ai-collab tag automatically.
+    If folder is Claude/, enforces the ai-generated tag automatically.
 
     Args:
         filename: Note filename including .md extension
@@ -429,6 +441,9 @@ def create_note(filename: str, content: str, folder: str = "") -> str:
     fm, body = parse_frontmatter(content)
     if FOLDER_PROJEKTE in str(target_path):
         fm = enforce_ai_collab(fm)
+        content = render_frontmatter(fm) + "\n" + body
+    elif FOLDER_CLAUDE in str(target_path):
+        fm = enforce_ai_generated(fm)
         content = render_frontmatter(fm) + "\n" + body
 
     target_path.parent.mkdir(parents=True, exist_ok=True)
